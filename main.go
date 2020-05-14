@@ -17,15 +17,19 @@ func main()  {
 	hash, _ := HashPassword(password)
 
 	maps := make([]map[string]string, 0)
+	mapSub := make([]map[string]string, 0)
 
 	type Value map[string]interface{}
 
-	pattern := map[string]string{"pattern":"hg/test/#"}
-	patterns := map[string]string{"pattern":"hg/v1/#"}
+	pattern := map[string]string{"pattern":"a/b/#"}
+	patterns := map[string]string{"pattern":"d/e/f/#"}
+	patternSub := map[string]string{"pattern":"hg/v1/#"}
 	maps = append(maps,pattern)
 	maps = append(maps,patterns)
+	mapSub = append(mapSub,patternSub)
+	mapSub = append(mapSub,pattern)
 
-	value := map[string]interface{}{"passhash": hash, "subcribe_acl": maps, "publish_acl": maps }
+	value := map[string]interface{}{"passhash": hash, "publish_acl": maps, "subscribe_acl": mapSub }
 
 
 	key := []string{"", "namle", "namle123456"}
@@ -36,7 +40,7 @@ func main()  {
 		panic(err)
 	}
 
-	//pong, err := client.Ping().Result()
+
 	err = client.Set(string(bTest),
 		bNono, 0).Err()
 }
