@@ -1,0 +1,31 @@
+version: "3.4"
+services:
+  vernemq:
+    image : erlio/docker-vernemq
+    ports:
+      - 1884:1883
+    restart:  on-failure
+    networks:
+      - same
+    environment:
+      - DOCKER_VERNEMQ_ACCEPT_EULA=yes
+      - DOCKER_VERNEMQ_VMQ_DIVERSITY__AUTH_REDIS__ENABLED=on
+      - DOCKER_VERNEMQ_VMQ_DIVERSITY__REDIS__HOST= redis
+      - DOCKER_VERNEMQ_VMQ_DIVERSITY__REDIS__PORT= 6379
+      - DOCKER_VERNEMQ_VMQ_DIVERSITY__REDIS__DATABASE= 0
+      - DOCKER_VERNEMQ_PLUGINS__VMQ_DIVERSITY= on
+      - DOCKER_VERNEMQ_VMQ_DIVERSITY__REDIS__PASSWORD= bbf5099c19728139a0c0bc77de98e241ddbe13a6f923b3557a6a035e45f05d1c27ec728af982b629b682d47fc043db5b48e2573880f3da3be527782ab7246181
+      - DOCKER_VERNEMQ_LOG__CONSOLE__LEVEL=debug
+    links:
+      - redis
+  redis:
+    image: redis
+    command: redis-server --requirepass bbf5099c19728139a0c0bc77de98e241ddbe13a6f923b3557a6a035e45f05d1c27ec728af982b629b682d47fc043db5b48e2573880f3da3be527782ab7246181
+    ports:
+      - 6379:6379
+    restart: on-failure
+    networks :
+      - same
+networks:
+  same:
+    driver: bridge
