@@ -15,19 +15,22 @@ services:
       - DOCKER_VERNEMQ_VMQ_DIVERSITY__REDIS__DATABASE= 0
       - DOCKER_VERNEMQ_PLUGINS__VMQ_DIVERSITY= on
       - DOCKER_VERNEMQ_VMQ_DIVERSITY__REDIS__PASSWORD= bbf5099c19728139a0c0bc77de98e241ddbe13a6f923b3557a6a035e45f05d1c27ec728af982b629b682d47fc043db5b48e2573880f3da3be527782ab7246181
-      - DOCKER_VERNEMQ_LOG__CONSOLE__LEVEL=debug
+      #      - DOCKER_VERNEMQ_LOG__CONSOLE__LEVEL=debug
       - DOCKER_VERNEMQ_PLUGINS__VMQ_PASSWD=off
       - DOCKER_VERNEMQ_PLUGINS__VMQ_ACL=off
     links:
       - redis
   redis:
-    image: redis
-    command: redis-server --requirepass bbf5099c19728139a0c0bc77de98e241ddbe13a6f923b3557a6a035e45f05d1c27ec728af982b629b682d47fc043db5b48e2573880f3da3be527782ab7246181
+    image: redis:alpine
+    command: >
+      sh -c "redis-server --appendonly yes --requirepass bbf5099c19728139a0c0bc77de98e241ddbe13a6f923b3557a6a035e45f05d1c27ec728af982b629b682d47fc043db5b48e2573880f3da3be527782ab7246181"
     ports:
       - 6379:6379
-    restart: on-failure
+    restart: always
     networks :
       - same
+    volumes:
+      - ./data/redis:/data
 networks:
   same:
     driver: bridge
